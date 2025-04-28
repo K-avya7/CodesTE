@@ -1,0 +1,102 @@
+Overview: What is Salesforce and Apex?
+Salesforce.com is a very popular cloud platform mainly for Customer Relationship Management (CRM) but it also supports building custom applications.
+
+Apex is Salesforce’s own programming language.
+It’s similar to Java and is used for:
+
+Writing business logic
+
+Building custom functionality
+
+Triggering workflows
+
+How to Create an Application in Salesforce Using Apex
+Here’s a simple guide:
+
+Step 1: Log in to Salesforce Developer Edition
+Go to developer.salesforce.com.
+
+Sign up for a free Developer account.
+
+Log in to Salesforce Setup.
+
+Step 2: Create a New Application
+In Setup, search for App Manager.
+
+Click New Lightning App (or "New Classic App" if you prefer older view).
+
+Fill in:
+
+App Name (e.g., "Student Management")
+
+App Logo (optional)
+
+Set Navigation Items (which tabs to show like Home, Contacts, etc.)
+
+Save your app.
+
+Now you have a blank app ready.
+
+Step 3: Create Custom Objects (like Tables in a Database)
+Go to Object Manager in Setup.
+
+Click Create → Custom Object.
+
+Example: Create an object called Student__c
+
+Fields: Name, Age, Grade, Email, etc.
+
+Save.
+
+Now you have a data model for your app!
+
+Step 4: Write Apex Code
+There are two main ways:
+
+Apex Classes: For creating reusable code.
+
+Apex Triggers: For reacting automatically when data is inserted/updated/deleted.
+
+Example 1: Apex Class
+
+public class StudentManager {
+    public static void enrollStudent(String name, Integer age, String grade) {
+        Student__c newStudent = new Student__c(
+            Name = name,
+            Age__c = age,
+            Grade__c = grade
+        );
+        insert newStudent;
+    }
+}
+This class creates a method to insert a new student record.
+
+Example 2: Apex Trigger
+
+Suppose you want to automatically set the Grade to "Pending" when a new student is created:
+
+
+trigger SetDefaultGrade on Student__c (before insert) {
+    for (Student__c stu : Trigger.new) {
+        if (stu.Grade__c == null) {
+            stu.Grade__c = 'Pending';
+        }
+    }
+}
+This trigger sets a default value before the record is saved.
+
+Step 5: Test Your Code
+Salesforce requires writing test classes before deploying Apex code!
+Example of a test class:
+
+@isTest
+private class StudentManagerTest {
+    @isTest
+    static void testEnrollStudent() {
+        StudentManager.enrollStudent('John Doe', 16, '10th');
+        
+        Student__c stu = [SELECT Name FROM Student__c WHERE Name = 'John Doe' LIMIT 1];
+        System.assertEquals('John Doe', stu.Name);
+    }
+}
+This checks if your Apex code is working properly.
